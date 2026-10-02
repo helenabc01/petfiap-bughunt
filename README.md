@@ -16,10 +16,10 @@
 
 | Campo | |
 |---|---|
-| **Total de bugs corrigidos** | 4 / 12 |
+| **Total de bugs corrigidos** | 5 / 12 |
 | **Total de ajustes de Clean Code** | 0 / 6 |
 | **Total de testes novos escritos** | 0 / 6 |
-| **Suíte final (Run As → JUnit Test)** | 20 testes, 4 falhas |
+| **Suíte final (Run As → JUnit Test)** | 20 testes, 3 falhas |
 
 ---
 
@@ -34,7 +34,7 @@
 | bug02 | AtendimentoBuilderTest falhava em deveMontarAtendimentoCompleto: getPetNome() retornava null em vez de "Rex". | AtendimentoBuilder.java (~linha 24): o método comPet fazia `petNome = petNome;` (autoatribuição do parâmetro), deixando o atributo do objeto sem valor. | Alterado para `this.petNome = petNome;`, atribuindo corretamente o valor recebido ao atributo da instância. | Escopo de identificadores, sombreamento de variáveis (shadowing) e referência `this` em POO. |
 | bug03 | AtendimentoBuilderTest falhava em deveRecusarMontagemSemNomeDoPet: nenhuma exceção era lançada ao montar sem nome do pet. | AtendimentoBuilder.java (~linha 42): o método construir() delegava a criação sem validar se `petNome` era nulo ou vazio. | Adicionada validação de `petNome == null || petNome.isBlank()` lançando `IllegalArgumentException` no método construir(). | Padrão Builder (Aula 14) e garantia de invariantes: o objeto só nasce em estado válido. |
 | bug04 | AtendimentoBuilderTest falhava em deveRecusarMontagemSemPorte: nenhuma exceção era lançada ao montar sem porte do pet. | AtendimentoBuilder.java (~linha 45): o método construir() não validava se `petPorte` era nulo ou vazio. | Adicionada validação de `petPorte == null || petPorte.isBlank()` lançando `IllegalArgumentException` no método construir(). | Padrão Builder (Aula 14), integridade de dados e validação de invariantes em POO. |
-| bug05 | | | | |
+| bug05 | AtendimentoFactoryTest falhava em deveCriarTosaQuandoTipoForTosa: esperava instância de Tosa, mas recebia Banho. | AtendimentoFactory.java (~linha 17): no switch do factory, o case "TOSA" retornava `new Banho` por engano. | Corrigido o case "TOSA" para instanciar e retornar `new Tosa(...)`. | Padrão de Projeto Factory (Aula 14) e polimorfismo na criação de subclasses concretas. |
 | bug06 | | | | |
 | bug07 | | | | |
 | bug08 | | | | |
