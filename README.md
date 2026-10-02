@@ -16,10 +16,10 @@
 
 | Campo | |
 |---|---|
-| **Total de bugs corrigidos** | 5 / 12 |
+| **Total de bugs corrigidos** | 6 / 12 |
 | **Total de ajustes de Clean Code** | 0 / 6 |
 | **Total de testes novos escritos** | 0 / 6 |
-| **Suíte final (Run As → JUnit Test)** | 20 testes, 3 falhas |
+| **Suíte final (Run As → JUnit Test)** | 20 testes, 2 falhas |
 
 ---
 
@@ -35,7 +35,7 @@
 | bug03 | AtendimentoBuilderTest falhava em deveRecusarMontagemSemNomeDoPet: nenhuma exceção era lançada ao montar sem nome do pet. | AtendimentoBuilder.java (~linha 42): o método construir() delegava a criação sem validar se `petNome` era nulo ou vazio. | Adicionada validação de `petNome == null || petNome.isBlank()` lançando `IllegalArgumentException` no método construir(). | Padrão Builder (Aula 14) e garantia de invariantes: o objeto só nasce em estado válido. |
 | bug04 | AtendimentoBuilderTest falhava em deveRecusarMontagemSemPorte: nenhuma exceção era lançada ao montar sem porte do pet. | AtendimentoBuilder.java (~linha 45): o método construir() não validava se `petPorte` era nulo ou vazio. | Adicionada validação de `petPorte == null || petPorte.isBlank()` lançando `IllegalArgumentException` no método construir(). | Padrão Builder (Aula 14), integridade de dados e validação de invariantes em POO. |
 | bug05 | AtendimentoFactoryTest falhava em deveCriarTosaQuandoTipoForTosa: esperava instância de Tosa, mas recebia Banho. | AtendimentoFactory.java (~linha 17): no switch do factory, o case "TOSA" retornava `new Banho` por engano. | Corrigido o case "TOSA" para instanciar e retornar `new Tosa(...)`. | Padrão de Projeto Factory (Aula 14) e polimorfismo na criação de subclasses concretas. |
-| bug06 | | | | |
+| bug06 | AtendimentoFactoryTest falhava em devePreencherOsDadosDoPetNaConsulta: os atributos do pet vinham null. | ConsultaVeterinaria.java (~linha 17): o construtor com parâmetros chamava `super();` vazio, sem repassar os dados para a superclasse. | Alterado para `super(protocolo, petNome, petPorte, tutorNome, dataHora);`, inicializando os campos da classe abstrata. | Herança (Aula 07), chamada a construtor da superclasse via `super(...)` e inicialização de atributos herdados. |
 | bug07 | | | | |
 | bug08 | | | | |
 | bug09 | | | | |
