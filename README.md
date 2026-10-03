@@ -16,10 +16,10 @@
 
 | Campo | |
 |---|---|
-| **Total de bugs corrigidos** | 7 / 12 |
+| **Total de bugs corrigidos** | 8 / 12 |
 | **Total de ajustes de Clean Code** | 0 / 6 |
 | **Total de testes novos escritos** | 0 / 6 |
-| **Suíte final (Run As → JUnit Test)** | 20 testes, 1 falha |
+| **Suíte final (Run As → JUnit Test)** | 20 testes, 0 falhas |
 
 ---
 
@@ -37,7 +37,7 @@
 | bug05 | AtendimentoFactoryTest falhava em deveCriarTosaQuandoTipoForTosa: esperava instância de Tosa, mas recebia Banho. | AtendimentoFactory.java (~linha 17): no switch do factory, o case "TOSA" retornava `new Banho` por engano. | Corrigido o case "TOSA" para instanciar e retornar `new Tosa(...)`. | Padrão de Projeto Factory (Aula 14) e polimorfismo na criação de subclasses concretas. |
 | bug06 | AtendimentoFactoryTest falhava em devePreencherOsDadosDoPetNaConsulta: os atributos do pet vinham null. | ConsultaVeterinaria.java (~linha 17): o construtor com parâmetros chamava `super();` vazio, sem repassar os dados para a superclasse. | Alterado para `super(protocolo, petNome, petPorte, tutorNome, dataHora);`, inicializando os campos da classe abstrata. | Herança (Aula 07), chamada a construtor da superclasse via `super(...)` e inicialização de atributos herdados. |
 | bug07 | AgendaServiceTest falhava em deveRecusarAgendamentoComHorarioJaOcupado lançando NullPointerException. | AgendaService.java (~linha 23): comparava `a.getDataHora() == novo.getDataHora()` e `a.getPetNome() == novo.getPetNome()` usando operador de identidade `==`. | Substituído `==` por `.equals()` nas comparações de String e LocalDateTime. | Comparação lógica (`.equals()`) vs comparação de referência (`==`) em tipos de objetos (Aula 07). |
-| bug08 | | | | |
+| bug08 | AgendaServiceTest falhava em deveLancarExcecaoQuandoAtendimentoNaoExiste: esperava AtendimentoNaoEncontradoException, mas nenhuma exceção era lançada. | AgendaService.java (~linha 37): o método buscarPorId envolvia o orElseThrow em um bloco try-catch genérico (catch (Exception e)) capturando a exceção e retornando null. | Removido o bloco try-catch genérico de buscarPorId, permitindo a propagação da exceção AtendimentoNaoEncontradoException quando o registro não for encontrado. | Tratamento de Exceções (Aula 11), antipadrão de engolir exceções (exception swallowing) com catch genérico e propagação de RuntimeException. |
 | bug09 | | | | |
 | bug10 | | | | |
 | bug11 | | | | |
