@@ -18,7 +18,7 @@
 |---|---|
 | **Total de bugs corrigidos** | 8 / 12 |
 | **Total de ajustes de Clean Code** | 0 / 6 |
-| **Total de testes novos escritos** | 0 / 6 |
+| **Total de testes novos escritos** | 1 / 6 |
 | **Suíte final (Run As → JUnit Test)** | 20 testes, 0 falhas |
 
 ---
@@ -63,7 +63,7 @@
 
 | # | Teste escrito (classe.método) | Regra coberta | Resultado ao escrever (vermelho/verde) |
 |---|---|---|---|
-| teste01 | | | |
+| teste01 | BanhoTest.deveCustar60ReaisParaPortePequeno | Preço do banho para porte pequeno (R$ 60,00) | Vermelho (revelou bug09) |
 | teste02 | | | |
 | teste03 | | | |
 | teste04 | | | |
