@@ -16,10 +16,10 @@
 
 | Campo | |
 |---|---|
-| **Total de bugs corrigidos** | 11 / 12 |
+| **Total de bugs corrigidos** | 12 / 12 |
 | **Total de ajustes de Clean Code** | 0 / 6 |
 | **Total de testes novos escritos** | 4 / 6 |
-| **Suíte final (Run As → JUnit Test)** | 23 testes, 0 falhas |
+| **Suíte final (Run As → JUnit Test)** | 24 testes, 0 falhas |
 
 ---
 
@@ -41,7 +41,7 @@
 | bug09 | BanhoTest falhava em deveCustar60ReaisParaPortePequeno: esperava 60.0 mas recebia 100.0. | Banho.java (~linha 27): os valores de retorno para porte PEQUENO (100.0) e GRANDE (60.0) estavam invertidos em calcularPreco(). | Invertidos os retornos de calcularPreco() em Banho.java, retornando 60.0 para PEQUENO e 100.0 para GRANDE conforme o contrato da aplicação. | Polimorfismo e implementação de regras de negócio em subclasses concretas (Aula 07). |
 | bug10 | TosaTest falhava em deveDurar60Minutos: esperava 60 mas recebia 30 minutos. | Tosa.java (~linha 40): o método getDuracaoMinutos(String porte) continha parâmetro indevido, gerando sobrecarga (overload) em vez de sobrescrita (override) de getDuracaoMinutos() de Atendimento. | Removido o parâmetro String porte e adicionada a anotação @Override ao método getDuracaoMinutos() em Tosa.java para sobrescrever o método da superclasse. | Herança e Polimorfismo: Sobrescrita (Override) vs Sobrecarga (Overload) de métodos e anotação @Override (Aula 07). |
 | bug11 | AgendaServiceTest falhava em deveRecusarCancelamentoDeAtendimentoConcluido: esperava StatusInvalidoException, mas nenhuma exceção era lançada. | Atendimento.java (~linha 63): o método cancelar() alterava o status para "CANCELADO" diretamente sem verificar se o atendimento estava no status "AGENDADO". | Adicionada validação if (!"AGENDADO".equals(status)) lançando StatusInvalidoException no método cancelar(). | Encapsulamento, integridade de estado e validação de transição de estados em POO (Aula 07 e 11). |
-| bug12 | | | | |
+| bug12 | AgendaServiceTest falhava em deveRecusarAgendamentoComDataHoraNoPassado: esperava IllegalArgumentException, mas o agendamento prosseguia e consultava o banco. | AgendaService.java (~linha 20): o método agendar() não validava se a data e hora do atendimento estavam no passado antes de consultar o repositório. | Adicionada validação de dataHora no passado lançando IllegalArgumentException antes de acessar o repositório. | Integridade de dados, validação de regras de negócio em services e validação de invariantes temporais (Aula 11 e 15). |
 
 ## Parte 2 — Ajustes de Clean Code
 
