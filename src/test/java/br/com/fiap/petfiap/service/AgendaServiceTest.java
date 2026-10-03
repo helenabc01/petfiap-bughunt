@@ -124,4 +124,17 @@ public class AgendaServiceTest {
         // Nada e salvo quando a operacao e recusada
         verify(repository, never()).save(any());
     }
+
+    @Test
+    public void deveRecusarAgendamentoComDataHoraNoPassado() {
+        // Arrange: atendimento com data/hora no passado
+        Banho noPassado = new Banho(1, "Rex", "PEQUENO", "Ana", LocalDateTime.now().minusDays(1));
+
+        // Act + Assert: deve recusar com IllegalArgumentException
+        assertThrows(IllegalArgumentException.class, () -> service.agendar(noPassado));
+
+        // O banco nem e consultado nem alterado
+        verify(repository, never()).findByPetNome(any());
+        verify(repository, never()).save(any());
+    }
 }
