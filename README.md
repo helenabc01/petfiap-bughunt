@@ -18,7 +18,7 @@
 |---|---|
 | **Total de bugs corrigidos** | 10 / 12 |
 | **Total de ajustes de Clean Code** | 0 / 6 |
-| **Total de testes novos escritos** | 2 / 6 |
+| **Total de testes novos escritos** | 3 / 6 |
 | **Suíte final (Run As → JUnit Test)** | 22 testes, 0 falhas |
 
 ---
@@ -65,7 +65,7 @@
 |---|---|---|---|
 | teste01 | BanhoTest.deveCustar60ReaisParaPortePequeno | Preço do banho para porte pequeno (R$ 60,00) | Vermelho (revelou bug09) |
 | teste02 | TosaTest.deveDurar60Minutos | Duração da tosa (60 minutos) | Vermelho (revelou bug10) |
-| teste03 | | | |
+| teste03 | AgendaServiceTest.deveRecusarCancelamentoDeAtendimentoConcluido | Cancelamento de atendimento já concluído recusado com StatusInvalidoException | Vermelho (revelou bug11) |
 | teste04 | | | |
 | teste05 | | | |
 | teste06 | | | |
