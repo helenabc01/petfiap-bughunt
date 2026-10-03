@@ -16,10 +16,10 @@
 
 | Campo | |
 |---|---|
-| **Total de bugs corrigidos** | 9 / 12 |
+| **Total de bugs corrigidos** | 10 / 12 |
 | **Total de ajustes de Clean Code** | 0 / 6 |
 | **Total de testes novos escritos** | 2 / 6 |
-| **Suíte final (Run As → JUnit Test)** | 21 testes, 0 falhas |
+| **Suíte final (Run As → JUnit Test)** | 22 testes, 0 falhas |
 
 ---
 
@@ -39,7 +39,7 @@
 | bug07 | AgendaServiceTest falhava em deveRecusarAgendamentoComHorarioJaOcupado lançando NullPointerException. | AgendaService.java (~linha 23): comparava `a.getDataHora() == novo.getDataHora()` e `a.getPetNome() == novo.getPetNome()` usando operador de identidade `==`. | Substituído `==` por `.equals()` nas comparações de String e LocalDateTime. | Comparação lógica (`.equals()`) vs comparação de referência (`==`) em tipos de objetos (Aula 07). |
 | bug08 | AgendaServiceTest falhava em deveLancarExcecaoQuandoAtendimentoNaoExiste: esperava AtendimentoNaoEncontradoException, mas nenhuma exceção era lançada. | AgendaService.java (~linha 37): o método buscarPorId envolvia o orElseThrow em um bloco try-catch genérico (catch (Exception e)) capturando a exceção e retornando null. | Removido o bloco try-catch genérico de buscarPorId, permitindo a propagação da exceção AtendimentoNaoEncontradoException quando o registro não for encontrado. | Tratamento de Exceções (Aula 11), antipadrão de engolir exceções (exception swallowing) com catch genérico e propagação de RuntimeException. |
 | bug09 | BanhoTest falhava em deveCustar60ReaisParaPortePequeno: esperava 60.0 mas recebia 100.0. | Banho.java (~linha 27): os valores de retorno para porte PEQUENO (100.0) e GRANDE (60.0) estavam invertidos em calcularPreco(). | Invertidos os retornos de calcularPreco() em Banho.java, retornando 60.0 para PEQUENO e 100.0 para GRANDE conforme o contrato da aplicação. | Polimorfismo e implementação de regras de negócio em subclasses concretas (Aula 07). |
-| bug10 | | | | |
+| bug10 | TosaTest falhava em deveDurar60Minutos: esperava 60 mas recebia 30 minutos. | Tosa.java (~linha 40): o método getDuracaoMinutos(String porte) continha parâmetro indevido, gerando sobrecarga (overload) em vez de sobrescrita (override) de getDuracaoMinutos() de Atendimento. | Removido o parâmetro String porte e adicionada a anotação @Override ao método getDuracaoMinutos() em Tosa.java para sobrescrever o método da superclasse. | Herança e Polimorfismo: Sobrescrita (Override) vs Sobrecarga (Overload) de métodos e anotação @Override (Aula 07). |
 | bug11 | | | | |
 | bug12 | | | | |
 
