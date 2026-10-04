@@ -17,7 +17,7 @@
 | Campo | |
 |---|---|
 | **Total de bugs corrigidos** | 12 / 12 |
-| **Total de ajustes de Clean Code** | 5 / 6 |
+| **Total de ajustes de Clean Code** | 6 / 6 |
 | **Total de testes novos escritos** | 4 / 6 |
 | **Suíte final (Run As → JUnit Test)** | 24 testes, 0 falhas |
 
@@ -52,7 +52,7 @@
 | clean03 | Atendimento.java (~linha 25) e AgendaService.java (~linha 28) | Magic Strings / Literais Duplicados (Clean Code Cap. 17): valores de status ("AGENDADO", "CONCLUIDO", "CANCELADO") manipulados diretamente como literais espalhados pelas classes. | Definidas constantes públicas e semânticas STATUS_AGENDADO, STATUS_CONCLUIDO e STATUS_CANCELADO em Atendimento.java e substituídos os literais soltos pelo uso das constantes. |
 | clean04 | GeradorProtocolo.java (~linha 14) e AgendaService.java (~linha 34) | Poluição de Saída / Uso de System.out.println em produção: impressão direta no stdout em construtor e método de negócio, poluindo os logs e violando separação de responsabilidades. | Removidas as chamadas a System.out.println no construtor de GeradorProtocolo e na emissão de recibo em AgendaService. |
 | clean05 | AgendaService.java (~linha 16) | Injeção de Dependências por Campo (Field Injection) / Acoplamento Oculto: uso de @Autowired direto em atributo privado, dificultando testes unitários e permitindo criação do objeto em estado inválido. | Substituído @Autowired no atributo por injeção via construtor público e atributo marcado como final (private final AtendimentoRepository repository;), garantindo imutabilidade e inicialização explícita. |
-| clean06 | | | |
+| clean06 | AtendimentoBuilder.java (~linha 39) e AgendaService.java (~linha 29) | Comentários Enganosos e Condições Redundantes (Clean Code Cap. 4 e 17): comentário enganoso em AtendimentoBuilder alegando que a validação ficava a cargo do controller, além de verificação redundante do nome do pet em AgendaService. | Removido o comentário enganoso em AtendimentoBuilder.java, removida a checagem redundante de petNome (já filtrada pelo findByPetNome) e simplificado o retorno em AgendaService.agendar. |
 
 ## Parte 3 — Testes novos (regras que estavam sem cobertura)
 
