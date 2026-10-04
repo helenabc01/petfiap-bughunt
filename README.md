@@ -82,16 +82,22 @@ O projeto chegou com 20 testes, 9 vermelhos. Descreva como você usou as
 mensagens de falha (ex.: `expected: <Rex> but was: <null>`) para caçar os bugs.
 O que a suíte de testes tem de melhor do que testar tudo na mão com curl?
 
+As mensagens de falha da suíte funcionaram como um guia cirúrgico de diagnóstico, apontando a discrepância exata entre o contrato esperado e o comportamento obtido. No caso do `AtendimentoBuilderTest`, a mensagem `expected: <Rex> but was: <null>` revelou imediatamente que o método `comPet("Rex", "MEDIO")` não estava persistindo o valor no atributo do builder, levando à descoberta da autoatribuição `petNome = petNome` em `AtendimentoBuilder.java`. De forma semelhante, o `NullPointerException` em `AgendaServiceTest.deveRecusarAgendamentoComHorarioJaOcupado` apontou para o uso de `==` em vez de `.equals()` ao comparar objetos com valores mockados. Em comparação com testes manuais via `curl`, a suíte automatizada traz repetibilidade determinística instantânea: enquanto testar com `curl` exige subir a aplicação inteira (conectando ao Oracle), criar cenários no banco, rodar requisições manualmente e verificar JSONs a olho nu (processo lento e propenso a esquecimentos), os testes JUnit rodam em segundos em memória, isolam regras em nível de método e protegem o código contra regressões a cada nova alteração.
+
 ### 2. Mock e injeção de dependência (Aulas 13 a 15)
 No `AgendaServiceTest`, o `@Mock` cria um `AtendimentoRepository` falso e o
 `@InjectMocks` o injeta no service. Explique a relação disso com o `@Autowired`
 que o Spring faz em produção — quem "injeta" em cada mundo, e por que o teste
 consegue rodar sem banco e sem subir o Spring?
 
+Em ambiente de produção, quem gerencia e realiza a injeção de dependências é o ApplicationContext do Spring Framework (IoC Container). Ele detecta as classes anotadas com `@Service` e `@Repository`, instancia o bean singleton `AgendaService` e injeta nele a implementação concreta gerenciada pelo Spring Data JPA (`AtendimentoRepository`), a qual abre conexões reais com o banco Oracle configurado em `application.properties`. Já no ambiente de testes unitários com Mockito (`@ExtendWith(MockitoExtension.class)`), o Spring sequer é inicializado. O próprio framework Mockito cria dinamicamente um objeto proxy simulado (`@Mock`) que não acessa banco de dados algum, e o `@InjectMocks` injeta essa casca no `AgendaService` via construtor ou reflexão. Dessa forma, métodos como `when(repository.findByPetNome(...)).thenReturn(...)` programam retornos em memória pura, permitindo que a suíte execute centenas de cenários de negócio em milissegundos, com isolamento total de infraestrutura e sem falhar por instabilidades de rede ou banco fora do ar.
+
 ### 3. `==` vs `.equals()` (Aula 7)
 Um dos bugs fazia o agendamento duplicado passar pela verificação de conflito.
 Explique por que `==` entre Strings e `LocalDateTime` falhou aqui, por que ele
 "funciona por sorte" com literais como `"Rex"`, e o que a sua correção mudou.
+
+Em Java, o operador `==` compara a identidade de referências na memória Heap (se dois ponteiros apontam para o mesmíssimo endereço físico), enquanto o método `.equals()` compara o conteúdo semântico dos objetos. No método `agendar()` de `AgendaService.java`, comparava-se `a.getDataHora() == novo.getDataHora()` e `a.getPetNome() == novo.getPetNome()`. Com `LocalDateTime`, cada instância criada via `LocalDateTime.of(...)` ou vinda do repositório ocupa um endereço de memória distinto na Heap, fazendo com que `==` retorne `false` mesmo para instâncias que representam exatamente o mesmo instante no tempo. No caso de Strings, o `==` às vezes "funciona por sorte" devido ao mecanismo de String Constant Pool da JVM, que reaproveita a mesma referência em memória quando literais idênticos (como `"Rex"`) são declarados no código-fonte. Contudo, basta que a String venha de um payload JSON, banco de dados ou concatenação dinâmica (`new String(...)`) para que ela ocupe outro endereço e o `==` falhe. A correção substituiu `==` por `.equals()`, assegurando a comparação correta dos valores de texto e data/hora.
 
 ### 4. Sobrescrita vs sobrecarga (Aula 7)
 Um dos bugs compilava sem nenhum erro: um método parecia sobrescrever
@@ -99,16 +105,22 @@ Um dos bugs compilava sem nenhum erro: um método parecia sobrescrever
 diferença entre override e overload nesse caso e por que a anotação `@Override`
 teria impedido o bug.
 
+A sobrescrita (override) ocorre quando uma subclasse redefine um método herdado da superclasse mantendo exatamente o mesmo nome, lista de tipos de parâmetros e tipo de retorno compatível, permitindo o polimorfismo dinâmico em tempo de execução. Já a sobrecarga (overload) acontece quando métodos com o mesmo nome possuem listas de parâmetros diferentes na mesma hierarquia, criando métodos completamente distintos. Na classe `Tosa.java`, o desenvolvedor declarou `public int getDuracaoMinutos(String porte)`. Como a classe abstrata `Atendimento` definia `public int getDuracaoMinutos()` (sem parâmetros), o método em `Tosa` não sobrescreveu o original, mas gerou uma sobrecarga. Assim, ao chamar `tosa.getDuracaoMinutos()` polimorficamente via referência de `Atendimento`, a JVM despachava para a implementação da superclasse (retornando os 30 minutos padrão em vez dos 60 da tosa). Se a anotação `@Override` estivesse presente, o compilador do Java acusaria erro de compilação imediatamente, pois verificaria que nenhuma assinatura compatível existia na superclasse, barrando o bug antes de chegar a produção.
+
 ### 5. Singleton manual vs bean do Spring (Aula 14)
 O `GeradorProtocolo` é um Singleton escrito à mão e causou um dos bugs.
 Explique o que ele garante, qual foi o bug, e por que o `AgendaService`
 (`@Service`) não corre o mesmo risco no container do Spring.
+
+O padrão Singleton visa garantir que uma classe possua apenas uma única instância durante todo o ciclo de vida da aplicação e forneça um ponto global de acesso a ela (geralmente via método estático `getInstancia()`). No `GeradorProtocolo.java`, o bug residia no fato de o método `getInstancia()` verificar `if (instancia == null)` e retornar `new GeradorProtocolo()`, porém sem atribuir essa nova instância à variável estática `instancia`. Com isso, toda invocação gerava um objeto novo na memória e reiniciava o contador sequencial em 1000, violando a unicidade do Singleton. Em contraste, o `AgendaService` é gerenciado como um Spring Bean anotado com `@Service`. O container de Inversão de Controle (IoC) do Spring assume a responsabilidade de ciclo de vida e gerenciamento de escopo por padrão como Singleton: ele instancia a classe uma única vez na inicialização do contexto e compartilha a mesma referência injetada onde quer que ela seja requerida. O desenvolvedor não precisa escrever código manual de controle estático nem de lazy initialization, eliminando erros humanos de atribuição ou problemas de sincronização em concorrência.
 
 ### 6. Cobertura de testes: onde parar? (Aula 15)
 Dos 6 testes novos que você escreveu, alguns ficaram vermelhos (revelaram
 bugs) e outros verdes de cara (regras já corretas). Vale a pena manter os que
 ficaram verdes? Em um projeto real com prazo, o que você priorizaria testar:
 caminho feliz, caminhos de erro, ou 100% de cobertura? Justifique.
+
+Com certeza vale a pena manter os testes que ficaram verdes de cara, como o `ConsultaVeterinariaTest.deveCustar150ReaisFixo` e o `AgendaServiceTest.deveCancelarAtendimentoAgendadoComSucesso`. Embora não tenham revelado bugs no momento de sua criação, eles atuam como um contrato vivo e uma rede de proteção essencial contra regressões futuras: se amanhã outro desenvolvedor alterar o cálculo de preços ou mexer na lógica de cancelamento, o teste falhará imediatamente. Em um cenário corporativo real com prazo apertado, a busca cega por 100% de cobertura de linhas muitas vezes leva a testes frágeis que apenas cobrem getters, setters e configurações triviais sem agregar valor. A estratégia ideal deve priorizar: (1) o núcleo das regras de negócio e cálculos críticos (caminho feliz essencial); (2) cenários de borda e caminhos de erro que protejam a integridade dos dados e regras de negócio (como recusar agendamentos no passado ou com horário duplicado); e (3) fluxos de maior impacto financeiro ou de integridade. Alcançar 80% a 90% cobrindo o que é crítico traz muito mais segurança e retorno sobre investimento do que inflar métricas com 100% artificial.
 
 ---
 
