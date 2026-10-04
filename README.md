@@ -17,7 +17,7 @@
 | Campo | |
 |---|---|
 | **Total de bugs corrigidos** | 12 / 12 |
-| **Total de ajustes de Clean Code** | 0 / 6 |
+| **Total de ajustes de Clean Code** | 1 / 6 |
 | **Total de testes novos escritos** | 4 / 6 |
 | **Suíte final (Run As → JUnit Test)** | 24 testes, 0 falhas |
 
@@ -47,7 +47,7 @@
 
 | # | Onde estava | Qual princípio/boas práticas era violado | O que eu mudei |
 |---|---|---|---|
-| clean01 | | | |
+| clean01 | AtendimentoFactory.java (~linha 14) | Nomes Significativos / Legibilidade de Parâmetros (Clean Code Cap. 2): parâmetros nomeados com letras únicas e abreviações crípticas (p, t, n, po, tu, d). | Renomeados os parâmetros do método criar() para nomes descritivos e autoexplicativos: protocolo, tipo, petNome, petPorte, tutorNome e dataHora. |
 | clean02 | | | |
 | clean03 | | | |
 | clean04 | | | |
