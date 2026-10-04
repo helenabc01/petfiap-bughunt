@@ -17,7 +17,7 @@
 | Campo | |
 |---|---|
 | **Total de bugs corrigidos** | 12 / 12 |
-| **Total de ajustes de Clean Code** | 2 / 6 |
+| **Total de ajustes de Clean Code** | 3 / 6 |
 | **Total de testes novos escritos** | 4 / 6 |
 | **Suíte final (Run As → JUnit Test)** | 24 testes, 0 falhas |
 
@@ -49,7 +49,7 @@
 |---|---|---|---|
 | clean01 | AtendimentoFactory.java (~linha 14) | Nomes Significativos / Legibilidade de Parâmetros (Clean Code Cap. 2): parâmetros nomeados com letras únicas e abreviações crípticas (p, t, n, po, tu, d). | Renomeados os parâmetros do método criar() para nomes descritivos e autoexplicativos: protocolo, tipo, petNome, petPorte, tutorNome e dataHora. |
 | clean02 | AtendimentoController.java (~linha 110) | Código Morto / YAGNI (Clean Code Cap. 17): método privado calcularDescontoFidelidade() nunca invocado com comentários especulativos sobre funcionalidades futuras. | Removido o método morto calcularDescontoFidelidade() e os comentários especulativos que poluíam a classe controller. |
-| clean03 | | | |
+| clean03 | Atendimento.java (~linha 25) e AgendaService.java (~linha 28) | Magic Strings / Literais Duplicados (Clean Code Cap. 17): valores de status ("AGENDADO", "CONCLUIDO", "CANCELADO") manipulados diretamente como literais espalhados pelas classes. | Definidas constantes públicas e semânticas STATUS_AGENDADO, STATUS_CONCLUIDO e STATUS_CANCELADO em Atendimento.java e substituídos os literais soltos pelo uso das constantes. |
 | clean04 | | | |
 | clean05 | | | |
 | clean06 | | | |
