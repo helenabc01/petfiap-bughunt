@@ -18,8 +18,8 @@
 |---|---|
 | **Total de bugs corrigidos** | 12 / 12 |
 | **Total de ajustes de Clean Code** | 6 / 6 |
-| **Total de testes novos escritos** | 4 / 6 |
-| **Suíte final (Run As → JUnit Test)** | 24 testes, 0 falhas |
+| **Total de testes novos escritos** | 5 / 6 |
+| **Suíte final (Run As → JUnit Test)** | 25 testes, 0 falhas |
 
 ---
 
@@ -67,7 +67,7 @@
 | teste02 | TosaTest.deveDurar60Minutos | Duração da tosa (60 minutos) | Vermelho (revelou bug10) |
 | teste03 | AgendaServiceTest.deveRecusarCancelamentoDeAtendimentoConcluido | Cancelamento de atendimento já concluído recusado com StatusInvalidoException | Vermelho (revelou bug11) |
 | teste04 | AgendaServiceTest.deveRecusarAgendamentoComDataHoraNoPassado | Agendamento com data/hora no passado recusado com IllegalArgumentException | Vermelho (revelou bug12) |
-| teste05 | | | |
+| teste05 | ConsultaVeterinariaTest.deveCustar150ReaisFixo | Preço fixo da consulta veterinária independente do porte (R$ 150,00) | Verde de cara (regra já estava correta) |
 | teste06 | | | |
 
 ---
